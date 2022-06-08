@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_movie"
+    app:startDestination="@id/genreFragment">
+
+    <fragment
+        android:id="@+id/genreFragment"
+        android:name="id.indocyber.themoviedb.ui.genres.GenresFragment"
+        android:label="GenreFragment">
+        <action
+            android:id="@+id/action_genreFragment_to_moviesByGenresFragment"
+            app:destination="@id/moviesByGenresFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/moviesByGenresFragment"
+        android:name="id.indocyber.themoviedb.ui.movies_by_genres.MoviesByGenresFragment"
+        android:label="MoviesByGenresFragment">
+        <argument
+            android:name="genres"
+            app:argType="integer[]" />
+        <action
+            android:id="@+id/action_moviesByGenresFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieDetailFragment"
+        android:name="id.indocyber.themoviedb.ui.movie_detail.MovieDetailFragment"
+        android:label="MovieDetailFragment">
+        <argument
+            android:name="movies"
+            app:argType="integer" />
+    </fragment>
+</navigation>

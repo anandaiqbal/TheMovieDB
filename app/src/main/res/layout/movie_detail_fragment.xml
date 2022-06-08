@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="id.indocyber.themoviedb.viewmodel.MovieDetailViewModel" />
+
+        <variable
+            name="data"
+            type="id.indocyber.common.entity.movie_detail.MovieDetailResponse" />
+
+        <import type="kotlin.text.StringsKt" />
+
+        <import type="id.indocyber.common.base.Constants" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <RelativeLayout
+            android:id="@+id/movie_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToOutline="true">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image"
+                android:layout_width="125dp"
+                android:layout_height="200dp"
+                android:layout_below="@id/video_trailer"
+                android:background="#00000000"
+                custom:loadImage="@{Constants.IMG_CONFIG+data.posterPath}"
+                tools:src="@drawable/ic_launcher_background" />
+
+            <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                android:id="@+id/video_trailer"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/video_trailer"
+                android:layout_toRightOf="@id/image"
+                android:gravity="center"
+                android:text="@{data.title}"
+                tools:text="The Lord of the Rings: The Return of the King" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/releaseDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/genre"
+                android:layout_toRightOf="@id/image"
+                android:background="#00000000"
+                android:gravity="center"
+                android:text="@{data.releaseDate}" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/genre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:layout_toRightOf="@id/image"
+                android:background="#00000000"
+                android:gravity="center"
+                android:text="@{String.format(`%s`, vm.genreListToNames(data.genres))}" />
+
+            <TextView
+                android:id="@+id/detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/releaseDate"
+                android:layout_toRightOf="@id/image"
+                android:gravity="center"
+                android:text="@{data.overview}" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/movieReviewList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/image"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:listitem="@layout/movie_detail_fragment_item" />
+
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/retryButt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_autorenew_black_24dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

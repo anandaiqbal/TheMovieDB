@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_common_error_dialog_title">Error</string>
+    <string name="app_common_error_positive_button_text">Ok</string>
+    <string name="app_common_error_negative_button_text">Cancel</string>
+
+</resources>
