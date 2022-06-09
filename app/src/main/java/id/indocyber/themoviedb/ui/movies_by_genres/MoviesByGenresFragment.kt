@@ -1,6 +1,5 @@
 package id.indocyber.themoviedb.ui.movies_by_genres
 
-import android.app.ProgressDialog
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -19,17 +18,13 @@ class MoviesByGenresFragment : BaseFragment<MoviesByGenresViewModel,
         MoviesByGenresFragmentBinding>() {
     override val layoutResourceId: Int = R.layout.movies_by_genres_fragment
     override val vm: MoviesByGenresViewModel by viewModels()
-    val adapter = MoviesByGenreAdapter {
+    private val adapter = MoviesByGenreAdapter {
         vm.getMoviesForDetail(it.id)
     }
-    val args by navArgs<MoviesByGenresFragmentArgs>()
+    private val args by navArgs<MoviesByGenresFragmentArgs>()
 
     override fun initBinding(binding: MoviesByGenresFragmentBinding) {
         super.initBinding(binding)
-        val dialog = ProgressDialog.show(
-            context, "Loading",
-            "Please wait...", true
-        )
         binding.moviesRecycler.adapter = adapter
         vm.loadMovies(args.genres.toList())
         vm.moviesByGenreData.observe(this@MoviesByGenresFragment) {
@@ -39,17 +34,18 @@ class MoviesByGenresFragment : BaseFragment<MoviesByGenresViewModel,
         }
         adapter.addLoadStateListener {
             if (it.refresh is LoadState.Loading && adapter.itemCount == 0) {
-                dialog.show()
+                binding.loading.visibility = View.VISIBLE
             } else if (it.refresh is LoadState.Error && adapter.itemCount == 0) {
-                dialog.dismiss()
+                binding.loading.visibility = View.GONE
                 binding.moviesRecycler.visibility = View.GONE
                 binding.retryButt.visibility = View.VISIBLE
             } else if (it.refresh is LoadState.NotLoading) {
-                dialog.dismiss()
+                binding.loading.visibility = View.GONE
             }
         }
-        binding.retryButt.setOnClickListener{
+        binding.retryButt.setOnClickListener {
             adapter.retry()
+            binding.loading.visibility = View.GONE
             binding.moviesRecycler.visibility = View.VISIBLE
             binding.retryButt.visibility = View.GONE
         }

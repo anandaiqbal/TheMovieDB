@@ -5,10 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import id.indocyber.api_service.service.*
-import id.indocyber.api_service.usecase.GenresUseCase
-import id.indocyber.api_service.usecase.MovieDetailUseCase
-import id.indocyber.api_service.usecase.MovieReviewUseCase
-import id.indocyber.api_service.usecase.MoviesByGenresUseCase
+import id.indocyber.api_service.usecase.*
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -22,10 +19,14 @@ class UseCaseModule {
 
     @Provides
     fun provideMovieDetailUseCase(
-        movieDetailService: MovieDetailService,
-        movieVideoService: MovieVideoService
+        movieDetailService: MovieDetailService
     ) =
-        MovieDetailUseCase(movieDetailService, movieVideoService)
+        MovieDetailUseCase(movieDetailService)
+
+    @Provides
+    fun provideMovieVideoUseCase(
+        movieVideoService: MovieVideoService
+    ) = MovieVideoUseCase(movieVideoService)
 
     @Provides
     fun provideMovieReviewUseCase(

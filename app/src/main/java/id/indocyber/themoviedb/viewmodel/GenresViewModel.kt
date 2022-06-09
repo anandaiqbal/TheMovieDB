@@ -3,6 +3,7 @@ package id.indocyber.themoviedb.viewmodel
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.selection.SelectionTracker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import id.indocyber.api_service.usecase.GenresUseCase
 import id.indocyber.common.base.AppResponse
@@ -18,6 +19,7 @@ class GenresViewModel @Inject constructor(
     val genresUseCase: GenresUseCase
 ) :
     BaseViewModel(application) {
+    var selectionTracker: SelectionTracker<Long>? = null
     val genreData = MutableLiveData<AppResponse<List<Genre>>>()
 
     init {
@@ -32,10 +34,12 @@ class GenresViewModel @Inject constructor(
         }
     }
 
-    fun getGenresForMovies(genres: List<Int>) {
+    fun getGenresForMovies() {
         navigate(
             GenresFragmentDirections.actionGenreFragmentToMoviesByGenresFragment(
-            genres.toIntArray()
+                selectionTracker?.selection?.toList().orEmpty().map {
+                    it.toInt()
+                }.toIntArray()
             )
         )
     }

@@ -20,6 +20,7 @@ fun DependencyHandler.libraries() {
     retrofit()
     glide()
     gander()
+    lottie()
     daggerHilt()
     androidPaging()
     youtubePlayer()

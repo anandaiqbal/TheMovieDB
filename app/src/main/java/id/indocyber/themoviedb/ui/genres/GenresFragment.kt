@@ -1,8 +1,10 @@
 package id.indocyber.themoviedb.ui.genres
 
-import android.app.ProgressDialog
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
 import dagger.hilt.android.AndroidEntryPoint
 import id.indocyber.common.base.BaseFragment
 import id.indocyber.themoviedb.R
@@ -14,31 +16,57 @@ class GenresFragment : BaseFragment<GenresViewModel, GenresFragmentBinding>() {
     override val layoutResourceId: Int = R.layout.genres_fragment
     override val vm: GenresViewModel by viewModels()
     private val adapter = GenreAdapter {
-        vm.getGenresForMovies(listOf(it.id))
+        vm.selectionTracker?.isSelected(it) ?: false
     }
 
     override fun initBinding(binding: GenresFragmentBinding) {
         super.initBinding(binding)
-        val dialog = ProgressDialog.show(
-            context, "Loading",
-            "Please wait...", true
-        )
         binding.genresRecycler.adapter = adapter
+        createTracker()
         observeResponseData(vm.genreData, {
-            dialog.dismiss()
+            binding.loading.visibility = View.GONE
             adapter.differ.submitList(it)
         }, {
-            dialog.dismiss()
+            binding.loading.visibility = View.GONE
             binding.retryButt.visibility = View.VISIBLE
         }, {
-            dialog.show()
+            binding.loading.visibility = View.VISIBLE
         })
         binding.retryButt.setOnClickListener {
             vm.loadGenre()
             binding.retryButt.visibility = View.GONE
+            binding.loading.visibility = View.GONE
             binding.genresRecycler.visibility = View.VISIBLE
+        }
+        binding.fab.setOnClickListener {
+            vm.getGenresForMovies()
         }
     }
 
+    fun createTracker() {
+        vm.selectionTracker = vm.selectionTracker?.let {
+            SelectionTracker.Builder<Long>(
+                "genreId", binding.genresRecycler,
+                GenreItemKeyProvider(adapter), GenreItemDetailsLookup(binding.genresRecycler),
+                StorageStrategy.createLongStorage()
+            ).withOnItemActivatedListener { itemDetails, event ->
+                vm.selectionTracker?.select(itemDetails.selectionKey ?: 0)
+                true
+            }.withSelectionPredicate(SelectionPredicates.createSelectAnything()).build().apply {
+                it.selection.forEach {
+                    this.select(it)
+                }
+            }
+        } ?: kotlin.run {
+            SelectionTracker.Builder<Long>(
+                "genreId", binding.genresRecycler,
+                GenreItemKeyProvider(adapter), GenreItemDetailsLookup(binding.genresRecycler),
+                StorageStrategy.createLongStorage()
+            ).withOnItemActivatedListener { itemDetails, event ->
+                vm.selectionTracker?.select(itemDetails.selectionKey ?: 0)
+                true
+            }.withSelectionPredicate(SelectionPredicates.createSelectAnything()).build()
+        }
+    }
 
 }

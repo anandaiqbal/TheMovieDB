@@ -11,7 +11,7 @@ data class MovieDetailResponse(
     @SerializedName("belongs_to_collection")
     val belongsToCollection: BelongsToCollection,
     @SerializedName("budget")
-    val budget: Int,
+    val budget: Long,
     @SerializedName("genres")
     val genres: List<Genre>,
     @SerializedName("homepage")
@@ -37,7 +37,7 @@ data class MovieDetailResponse(
     @SerializedName("release_date")
     val releaseDate: String,
     @SerializedName("revenue")
-    val revenue: Int,
+    val revenue: Long,
     @SerializedName("runtime")
     val runtime: Int,
     @SerializedName("spoken_languages")
