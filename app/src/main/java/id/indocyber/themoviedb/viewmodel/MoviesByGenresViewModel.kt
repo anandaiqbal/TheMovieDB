@@ -8,12 +8,8 @@ import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import id.indocyber.api_service.usecase.MoviesByGenresUseCase
 import id.indocyber.common.base.BaseViewModel
-import id.indocyber.common.entity.genres.Genre
 import id.indocyber.common.entity.movies_by_genres.Result
-import id.indocyber.themoviedb.ui.genres.GenresFragmentDirections
 import id.indocyber.themoviedb.ui.movies_by_genres.MoviesByGenresFragmentDirections
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,10 +21,14 @@ class MoviesByGenresViewModel @Inject constructor(
     val moviesByGenreData = MutableLiveData<PagingData<Result>>()
 
     fun loadMovies(genres: List<Int>) {
-        viewModelScope.launch {
-            moviesByGenresUseCase(genres).cachedIn(CoroutineScope(Dispatchers.IO)).collect() {
-                moviesByGenreData.postValue(it)
+        if (moviesByGenreData.value == null) {
+            viewModelScope.launch {
+                moviesByGenresUseCase.invoke(genres).cachedIn(viewModelScope).collect {
+                    moviesByGenreData.postValue(it)
+                }
             }
+        } else {
+            moviesByGenreData.postValue(moviesByGenreData.value)
         }
     }
 

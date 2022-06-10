@@ -14,8 +14,6 @@ import id.indocyber.common.base.BaseViewModel
 import id.indocyber.common.entity.movie_detail.Genre
 import id.indocyber.common.entity.movie_detail.MovieDetailResponse
 import id.indocyber.common.entity.movie_review.Result
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -44,8 +42,14 @@ class MovieDetailViewModel @Inject constructor(
             movieVideoUseCase(movies).collect {
                 movieVideoData.postValue(it)
             }
-            movieReviewUseCase(movies).cachedIn(CoroutineScope(Dispatchers.IO)).collect {
-                movieReviewData.postValue(it)
+            if (movieReviewData.value == null) {
+                viewModelScope.launch {
+                    movieReviewUseCase.invoke(movies).cachedIn(viewModelScope).collect {
+                        movieReviewData.postValue(it)
+                    }
+                }
+            } else {
+                movieReviewData.postValue(movieReviewData.value)
             }
         }
     }

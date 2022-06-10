@@ -25,12 +25,14 @@ class GenresFragment : BaseFragment<GenresViewModel, GenresFragmentBinding>() {
         createTracker()
         observeResponseData(vm.genreData, {
             binding.loading.visibility = View.GONE
+            binding.fab.visibility =View.VISIBLE
             adapter.differ.submitList(it)
         }, {
             binding.loading.visibility = View.GONE
             binding.retryButt.visibility = View.VISIBLE
         }, {
             binding.loading.visibility = View.VISIBLE
+            binding.fab.visibility = View.GONE
         })
         binding.retryButt.setOnClickListener {
             vm.loadGenre()

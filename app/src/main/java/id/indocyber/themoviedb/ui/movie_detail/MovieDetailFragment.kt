@@ -11,6 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.indocyber.common.base.BaseFragment
 import id.indocyber.themoviedb.R
 import id.indocyber.themoviedb.databinding.MovieDetailFragmentBinding
+import id.indocyber.themoviedb.ui.base_load.BaseLoadAdapter
 import id.indocyber.themoviedb.viewmodel.MovieDetailViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,8 +21,9 @@ import kotlinx.coroutines.launch
 class MovieDetailFragment : BaseFragment<MovieDetailViewModel, MovieDetailFragmentBinding>() {
     override val layoutResourceId: Int = R.layout.movie_detail_fragment
     override val vm: MovieDetailViewModel by viewModels()
-    val adapter = MovieDetailAdapter()
-    val args by navArgs<MovieDetailFragmentArgs>()
+    private val adapter = MovieDetailAdapter()
+    private val loadStateAdapter = BaseLoadAdapter(::retryAction)
+    private val args by navArgs<MovieDetailFragmentArgs>()
 
     override fun initBinding(binding: MovieDetailFragmentBinding) {
         super.initBinding(binding)
@@ -31,6 +33,8 @@ class MovieDetailFragment : BaseFragment<MovieDetailViewModel, MovieDetailFragme
             binding.loading.visibility = View.GONE
             it.let {
                 binding.data = it
+                binding.genre.visibility = View.VISIBLE
+                binding.titleReview.visibility = View.VISIBLE
             }
         },
             {
@@ -40,6 +44,8 @@ class MovieDetailFragment : BaseFragment<MovieDetailViewModel, MovieDetailFragme
             },
             {
                 binding.loading.visibility = View.VISIBLE
+                binding.genre.visibility = View.INVISIBLE
+                binding.titleReview.visibility = View.INVISIBLE
             })
         observeResponseData(vm.movieVideoData, {
             binding.loading.visibility = View.GONE
@@ -59,11 +65,9 @@ class MovieDetailFragment : BaseFragment<MovieDetailViewModel, MovieDetailFragme
             }
         }, {
             binding.noVideo.visibility = View.VISIBLE
-            binding.loading.visibility = View.GONE
-            binding.videoTrailer.visibility = View.INVISIBLE
         }, {
-            binding.loading.visibility = View.VISIBLE
         })
+        binding.movieReviewList.adapter = adapter.withLoadStateFooter(loadStateAdapter)
         vm.movieReviewData.observe(this@MovieDetailFragment) {
             CoroutineScope(Dispatchers.Main).launch {
                 adapter.submitData(it)
@@ -75,5 +79,10 @@ class MovieDetailFragment : BaseFragment<MovieDetailViewModel, MovieDetailFragme
             binding.retryButt.visibility = View.GONE
             binding.movieReviewList.visibility = View.VISIBLE
         }
+    }
+
+    fun retryAction() {
+        adapter.retry()
+        binding.movieReviewList.visibility = View.VISIBLE
     }
 }

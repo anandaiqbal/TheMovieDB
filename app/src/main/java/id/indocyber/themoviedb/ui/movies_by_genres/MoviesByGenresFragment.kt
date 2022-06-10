@@ -4,10 +4,12 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import id.indocyber.common.base.BaseFragment
 import id.indocyber.themoviedb.R
 import id.indocyber.themoviedb.databinding.MoviesByGenresFragmentBinding
+import id.indocyber.themoviedb.ui.base_load.BaseLoadAdapter
 import id.indocyber.themoviedb.viewmodel.MoviesByGenresViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +23,7 @@ class MoviesByGenresFragment : BaseFragment<MoviesByGenresViewModel,
     private val adapter = MoviesByGenreAdapter {
         vm.getMoviesForDetail(it.id)
     }
+    private val loadStateAdapter = BaseLoadAdapter(::retryAction)
     private val args by navArgs<MoviesByGenresFragmentArgs>()
 
     override fun initBinding(binding: MoviesByGenresFragmentBinding) {
@@ -32,6 +35,7 @@ class MoviesByGenresFragment : BaseFragment<MoviesByGenresViewModel,
                 adapter.submitData(it)
             }
         }
+        binding.moviesRecycler.adapter = adapter.withLoadStateFooter(loadStateAdapter)
         adapter.addLoadStateListener {
             if (it.refresh is LoadState.Loading && adapter.itemCount == 0) {
                 binding.loading.visibility = View.VISIBLE
@@ -49,5 +53,10 @@ class MoviesByGenresFragment : BaseFragment<MoviesByGenresViewModel,
             binding.moviesRecycler.visibility = View.VISIBLE
             binding.retryButt.visibility = View.GONE
         }
+    }
+
+    fun retryAction() {
+        adapter.retry()
+        binding.moviesRecycler.visibility = View.VISIBLE
     }
 }

@@ -3,4 +3,7 @@
     <string name="no_video">No Video Available</string>
     <string name="fab">fab</string>
     <string name="review">Review</string>
+    <string name="no_movie">No Movie</string>
+    <string name="no_review">No Review</string>
+    <string name="retry">Retry</string>
 </resources>
