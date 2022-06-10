@@ -58,7 +58,9 @@ class MovieDetailFragment : BaseFragment<MovieDetailViewModel, MovieDetailFragme
                 binding.videoTrailer.initialize(listener, option)
             }
         }, {
+            binding.noVideo.visibility = View.VISIBLE
             binding.loading.visibility = View.GONE
+            binding.videoTrailer.visibility = View.INVISIBLE
         }, {
             binding.loading.visibility = View.VISIBLE
         })

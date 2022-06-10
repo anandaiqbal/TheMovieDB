@@ -26,109 +26,152 @@
         android:layout_height="wrap_content"
         android:scrollbars="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <RelativeLayout
 
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/movie_detail"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToOutline="true">
+                android:layout_height="match_parent">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/image"
-                    android:layout_width="125dp"
+                    android:layout_width="150dp"
                     android:layout_height="200dp"
-                    android:layout_below="@id/video_trailer"
                     android:background="#00000000"
+                    android:scaleType="fitXY"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title"
                     custom:loadImage="@{Constants.IMG_CONFIG+data.posterPath}"
                     tools:src="@drawable/ic_launcher_background" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/noVideo"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:background="@color/teal_200"
+                    android:gravity="center"
+                    android:text="@string/no_video"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="@id/video_trailer"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
                     android:id="@+id/video_trailer"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    app:enableAutomaticInitialization="false" />
+                    android:layout_height="wrap_content"
+                    app:enableAutomaticInitialization="false"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/video_trailer"
-                    android:layout_toRightOf="@id/image"
                     android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:text="@{data.title}"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toBottomOf="@id/video_trailer"
                     tools:text="The Lord of the Rings: The Return of the King" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/releaseDate"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/genre"
-                    android:layout_toRightOf="@id/image"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:background="#00000000"
-                    android:gravity="center"
-                    android:text="@{data.releaseDate}" />
+                    android:gravity="start"
+                    android:text="@{data.releaseDate}"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/image"
+                    app:layout_constraintTop_toBottomOf="@id/genre" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/genre"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/title"
-                    android:layout_toRightOf="@id/image"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:background="#00000000"
-                    android:gravity="center"
-                    android:text="@{String.format(`%s`, vm.genreListToNames(data.genres))}" />
+                    android:gravity="start"
+                    android:text="@{String.format(`Genre : %s`, vm.genreListToNames(data.genres))}"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/image"
+                    app:layout_constraintTop_toBottomOf="@id/title" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/detail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="start"
+                    android:text="@{data.overview}"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/image"
+                    app:layout_constraintTop_toBottomOf="@id/releaseDate" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/titleReview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/releaseDate"
-                    android:layout_toRightOf="@id/image"
+                    android:layout_marginTop="10dp"
                     android:gravity="center"
-                    android:text="@{data.overview}" />
+                    android:text="@string/review"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toBottomOf="@id/image" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/movieReviewList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/image"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/titleReview"
                     tools:listitem="@layout/movie_detail_fragment_item" />
 
-            </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <ImageButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/retryButt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:src="@drawable/ic_autorenew_black_24dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:visibility="gone" />
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/loading"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
+                android:layout_centerInParent="true"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:lottie_autoPlay="true"
                 app:lottie_fileName="33-video-cam.json"
                 app:lottie_loop="true"
                 app:lottie_speed="1" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>
