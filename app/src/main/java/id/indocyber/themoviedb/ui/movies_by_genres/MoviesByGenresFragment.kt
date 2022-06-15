@@ -43,6 +43,9 @@ class MoviesByGenresFragment : BaseFragment<MoviesByGenresViewModel,
                 binding.loading.visibility = View.GONE
                 binding.moviesRecycler.visibility = View.GONE
                 binding.retryButt.visibility = View.VISIBLE
+            } else if (it.refresh is LoadState.NotLoading && adapter.itemCount == 0) {
+                binding.loading.visibility = View.GONE
+                binding.noMovie.visibility = View.VISIBLE
             } else if (it.refresh is LoadState.NotLoading) {
                 binding.loading.visibility = View.GONE
             }

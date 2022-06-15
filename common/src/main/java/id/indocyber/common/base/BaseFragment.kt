@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
@@ -36,11 +35,6 @@ abstract class BaseFragment<VM : BaseViewModel, Binding : ViewDataBinding> : Fra
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        parentFragment?.let {
-            if (it is BaseFragment<*, *>) {
-                vm.parent = it.vm
-            }
-        }
         vm.navigationtEvent.observe(this) {
             findNavController().navigate(it)
         }
@@ -58,7 +52,7 @@ abstract class BaseFragment<VM : BaseViewModel, Binding : ViewDataBinding> : Fra
         data.observe(this) { response ->
             when (response) {
                 is AppResponse.AppResponseSuccess -> {
-                    success?.invoke(response.data)
+                    success.invoke(response.data)
                 }
                 is AppResponse.AppResponseError -> {
                     response.e?.let {

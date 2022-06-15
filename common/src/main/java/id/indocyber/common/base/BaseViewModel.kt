@@ -9,7 +9,6 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
     val navigationtEvent = SingleLiveEvent<NavDirections>()
     val popBackStackEvent = SingleLiveEvent<Any>()
-    var parent: BaseViewModel? = null
     fun navigate(nav: NavDirections) {
         navigationtEvent.postValue(nav)
     }
