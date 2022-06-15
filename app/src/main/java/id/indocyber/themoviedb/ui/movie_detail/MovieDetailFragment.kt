@@ -92,8 +92,11 @@ class MovieDetailFragment : BaseFragment<MovieDetailViewModel, MovieDetailFragme
         }
         binding.retryButt.setOnClickListener {
             vm.loadDetail(args.movies)
+            adapter.retry()
+            binding.noVideo.visibility = View.GONE
             binding.loading.visibility = View.GONE
             binding.retryButt.visibility = View.GONE
+            binding.videoTrailer.visibility = View.VISIBLE
             binding.movieReviewList.visibility = View.VISIBLE
         }
     }
